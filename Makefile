@@ -27,19 +27,19 @@ backup:
 	for f in $(VOFILES); do\
 		echo "Backing up $$f";\
 		mkdir --parents $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
-		cp $(COQLIB)$$f $(COQLIB)$(BACKUPDIR)$$f;\
+		cp -p $(COQLIB)$$f $(COQLIB)$(BACKUPDIR)$$f;\
 	done
 
 install-recompiled:
 	for f in $(VOFILES); do\
 		echo "Installing $$f";\
-		cp $$f $(COQLIB)$$f;\
+		cp -p $$f $(COQLIB)$$f;\
 	done
 
 restore:
 	for f in $(VOFILES); do\
 		echo "Restoring $$f";\
-		cp $(COQLIB)$(BACKUPDIR)$$f $(COQLIB)$$f;\
+		cp -p $(COQLIB)$(BACKUPDIR)$$f $(COQLIB)$$f;\
 	done
 
 clean:
@@ -55,13 +55,15 @@ user-contrib/Tactician/%.vo:
 	@rm -f $*.glob
 	@mkdir --parents $(dir theories/Init/$@)
 	@echo "coqc theories/Init/$<"
-	@$(COQBIN)coqc -q -coqlib . -I $(COQLIB)user-contrib/Tactician -noinit $<
+#	@$(COQBIN)coqc -q -coqlib . -I $(COQLIB)user-contrib/Tactician -noinit $<
+	@touch -r $(COQLIB)$@ $@
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) | .vfiles.d
 	@rm -f $*.glob
 	@mkdir --parents $(dir $@)
 	@echo "coqc $<"
-	@$(BOOTCOQC) $<
+#	@$(BOOTCOQC) $<
+	@touch -r $(COQLIB)$< $@
 
 # We compile a second time in case of benchmarking, for performance reasons (due to improved parallelism)
 # This is ugly again, because we need to block coqc from actually writing the .vo file

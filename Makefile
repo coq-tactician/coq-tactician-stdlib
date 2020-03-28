@@ -55,15 +55,15 @@ user-contrib/Tactician/%.vo:
 	@rm -f $*.glob
 	@mkdir --parents $(dir theories/Init/$@)
 	@echo "coqc theories/Init/$<"
-#	@$(COQBIN)coqc -q -coqlib . -I $(COQLIB)user-contrib/Tactician -noinit $<
-	@touch -r $(COQLIB)$@ $@
+	@$(COQBIN)coqc -q -coqlib . -I $(COQLIB)user-contrib/Tactician -noinit $<
+#	@touch -r $(COQLIB)$@ $@
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) | .vfiles.d
 	@rm -f $*.glob
 	@mkdir --parents $(dir $@)
 	@echo "coqc $<"
-#	@$(BOOTCOQC) $<
-	@touch -r $(COQLIB)$< $@
+	@$(BOOTCOQC) $<
+#	@touch -r $(COQLIB)$< $@
 
 # We compile a second time in case of benchmarking, for performance reasons (due to improved parallelism)
 # This is ugly again, because we need to block coqc from actually writing the .vo file

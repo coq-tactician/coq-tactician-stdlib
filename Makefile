@@ -9,15 +9,11 @@ BENCHMARKSTRING := $(if $(BENCHMARK),Set Tactician Benchmark $(BENCHMARK).,)
 BENCHMARKFLAG := $(if $(BENCHMARK),-l Benchmark.v,)
 
 ifeq ($(TACTICIANTHEORIES),)
-TACTICIANDIR := $(COQLIB)user-contrib/Tactician
+TACTICIANTHEORIES := $(COQLIB)user-contrib/Tactician
 endif
 ifeq ($(TACTICIANSRC),)
-TACTICIANDIR := $(COQLIB)user-contrib/Tactician
+TACTICIANSRC := $(COQLIB)user-contrib/Tactician
 endif
-
-FEATURES?=
-FEATSTRING := $(if $(FEATURES),Set Tactician Output Features.,)
-FEATFLAG := $(if $(FEATURES),-l Features.v,)
 
 # TODO: This is ugly, but since there are no .mllib source files installed by Coq,
 # coqdep cannot find plugin dependencies. Therefore, we just have to link all the .cmxs
@@ -59,25 +55,24 @@ clean:
 
 theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v | .vfiles.d
 	@rm -f $*.glob
-	@echo "coqc theories/Init/$<"
+	@echo "coqc $<"
 	@$(BOOTCOQC) -noinit -R theories Coq $<
 
-user-contrib/Tactician/%.vo:
+# We have to make sure that Record.v get compiled first.
+user-contrib/Tactician/%.vo: user-contrib/Tactician/%.v user-contrib/Tactician/Ltac1/Record.vo $(PLUGINFILES) Features.v | .vfiles.d
 	@rm -f $*.glob
-	@echo "coqc theories/Init/$<"
+	@echo "coqc $<"
 	@$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -noinit $<
-#	@touch -r $(COQLIB)$@ $@
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) $<
-#	@touch -r $(COQLIB)$< $@
 
 # We compile a second time in case of benchmarking, for performance reasons (due to improved parallelism)
 # This is ugly again, because we need to block coqc from actually writing the .vo file
 theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
-	@echo "coqc benchmark theories/Init/$<"
+	@echo "coqc benchmark $<"
 	@chmod -w $(<:=o)
 	@$(BOOTCOQC) $(BENCHMARKFLAG) -noinit -R theories Coq $< 2> /dev/null || true
 	@chmod +w $(<:=o)

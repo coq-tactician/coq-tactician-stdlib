@@ -8,7 +8,10 @@ BENCHMARK?=
 BENCHMARKSTRING := $(if $(BENCHMARK),Set Tactician Benchmark $(BENCHMARK).,)
 BENCHMARKFLAG := $(if $(BENCHMARK),-l Benchmark.v,)
 
-ifeq ($(TACTICIANDIR),)
+ifeq ($(TACTICIANTHEORIES),)
+TACTICIANDIR := $(COQLIB)user-contrib/Tactician
+endif
+ifeq ($(TACTICIANSRC),)
 TACTICIANDIR := $(COQLIB)user-contrib/Tactician
 endif
 
@@ -20,7 +23,7 @@ FEATFLAG := $(if $(FEATURES),-l Features.v,)
 # coqdep cannot find plugin dependencies. Therefore, we just have to link all the .cmxs
 # files into the build dir.
 PLUGINFILES=$(shell cd $(COQLIB) && find plugins user-contrib/Ltac2 user-contrib/Tactician -name *.cmxs)
-BOOTCOQC=$(COQBIN)coqc -q -coqlib . -I $(TACTICIANDIR) -R $(TACTICIANDIR) Tactician \
+BOOTCOQC=$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -R $(TACTICIANTHEORIES) Tactician \
          -rifrom Tactician Ltac1.Record $(FEATFLAG)
 
 ifeq ($(BENCHMARK),)
@@ -62,7 +65,7 @@ theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Featur
 user-contrib/Tactician/%.vo:
 	@rm -f $*.glob
 	@echo "coqc theories/Init/$<"
-	@$(COQBIN)coqc -q -coqlib . -I $(TACTICIANDIR) -noinit $<
+	@$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -noinit $<
 #	@touch -r $(COQLIB)$@ $@
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v | .vfiles.d

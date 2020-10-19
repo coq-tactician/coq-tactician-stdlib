@@ -88,12 +88,12 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 	@mkdir --parents $(dir $@)
 	@ln -s -T $(COQLIB)$@ $@
 
-# Special target for Notations.v, so that we can set the proper default proof mode
-theories/Init/Notations.v:
+# Special target for Ltac.v, so that we can set the proper default proof mode
+theories/Init/Ltac.v:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
-	@cp $(COQLIB)/theories/Init/Notations.v theories/Init/Notations.v
-	@echo "Global Set Default Proof Mode \"Tactician Ltac1\"." >> theories/Init/Notations.v # TODO: With this, we cannot disable tactician anymore
+	@cp $(COQLIB)/theories/Init/Ltac.v theories/Init/Ltac.v
+	@echo "Export Set Default Proof Mode \"Tactician Ltac1\"." >> theories/Init/Ltac.v # TODO: With this, we cannot disable tactician anymore
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force

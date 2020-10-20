@@ -50,7 +50,7 @@ restore:
 	done
 
 clean:
-	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v parse_errors.txt bench
+	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v bench
 	find . -name *.feat -name *.bench -delete
 
 theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v | .vfiles.d

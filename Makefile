@@ -114,10 +114,10 @@ USERCONTRIBDIRS:=\
 	Ltac2 Tactician
 PLUGINDIRS:=\
   omega		micromega \
-  setoid_ring 	extraction \
+  ring 	extraction \
   cc 		funind 		firstorder 	derive \
   rtauto 	nsatz           syntax          btauto \
-  ssrmatching	ltac		ssr
+  ssrmatching	ltac		ssr             ssrsearch
 
 .vfiles.d: $(VFILES) $(PLUGINFILES)
 	@echo "coqdep"

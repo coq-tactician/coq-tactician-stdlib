@@ -1,6 +1,6 @@
 COQLIB:=$(shell $(COQBIN)coqc -where)/
 BACKUPDIR:="user-contrib/tactician-stdlib-backup/"
-VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 user-contrib/Tactician -name *.v)
+VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 -name *.v)
 VOFILES:=$(VFILES:=o)
 BENCHFILES:=$(VFILES:.v=.bench)
 
@@ -57,12 +57,6 @@ theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Featur
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) -noinit -R theories Coq $<
-
-# We have to make sure that Record.v get compiled first.
-user-contrib/Tactician/%.vo: user-contrib/Tactician/%.v user-contrib/Tactician/Ltac1/Record.vo $(PLUGINFILES) Features.v | .vfiles.d
-	@rm -f $*.glob
-	@echo "coqc $<"
-	@$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -noinit $<
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v | .vfiles.d
 	@rm -f $*.glob

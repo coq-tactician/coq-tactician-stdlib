@@ -52,15 +52,15 @@ restore:
 	done
 
 clean:
-	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v bench
+	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v .patch
 	find . -name *.feat -name *.bench -delete
 
-theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v | .vfiles.d
+theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) -noinit -R theories Coq $<
 
-%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v | .vfiles.d
+%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) $<
@@ -79,17 +79,15 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 	@$(BOOTCOQC) $(BENCHMARKFLAG) $< 2> /dev/null || true
 	@chmod +w $(<:=o)
 
+theories/Init/%.v:
+	@echo "Linking $@"
+	@mkdir --parents $(dir $@)
+	@cp $(COQLIB)$@ $@
+
 %.v %.cmxs:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
 	@ln -s -T $(COQLIB)$@ $@
-
-# Special target for Notations.v, so that we can set the proper default proof mode
-theories/Init/Notations.v:
-	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
-	@cp $(COQLIB)/theories/Init/Notations.v theories/Init/Notations.v
-	@echo "Global Set Default Proof Mode \"Tactician Ltac1\"." >> theories/Init/Notations.v # TODO: With this, we cannot disable tactician anymore
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force
@@ -124,5 +122,9 @@ PLUGINDIRS:=\
                          $(addprefix -I user-contrib/,$(USERCONTRIBDIRS)) \
                          $(VFILES) $(TOTARGET)
 
+.patch: $(VFILES) stdlib-inject.patch
+	@echo "patching"
+	@git apply stdlib-inject.patch
+	@touch .patch
 
 .PHONY: all clean force

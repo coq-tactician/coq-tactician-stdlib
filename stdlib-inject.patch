@@ -1,0 +1,141 @@
+From a1d89f1d6a80aaaab287bb2adbba05951d45db9e Mon Sep 17 00:00:00 2001
+From: Lasse Blaauwbroek <lasse@blaauwbroek.eu>
+Date: Mon, 16 Nov 2020 05:34:56 +0100
+Subject: [PATCH] Patch to inject Tactician into the standard library.
+
+---
+ theories/Init/Byte.v       | 1 +
+ theories/Init/Datatypes.v  | 1 +
+ theories/Init/Logic.v      | 1 +
+ theories/Init/Logic_Type.v | 1 +
+ theories/Init/Peano.v      | 1 +
+ theories/Init/Prelude.v    | 1 +
+ theories/Init/Specif.v     | 1 +
+ theories/Init/Tactics.v    | 1 +
+ theories/Init/Tauto.v      | 1 +
+ theories/Init/Wf.v         | 1 +
+ 10 files changed, 10 insertions(+)
+
+diff --git a/theories/Init/Byte.v b/theories/Init/Byte.v
+index e03820ef22..aef5056bca 100644
+--- a/theories/Init/Byte.v
++++ b/theories/Init/Byte.v
+@@ -15,6 +15,7 @@ Require Import Coq.Init.Datatypes.
+ Require Import Coq.Init.Logic.
+ Require Import Coq.Init.Specif.
+ Require Coq.Init.Nat.
++From Tactician Require Import Ltac1.Record.
+ 
+ Declare ML Module "number_string_notation_plugin".
+ 
+diff --git a/theories/Init/Datatypes.v b/theories/Init/Datatypes.v
+index 9984bff0c2..4494da0d24 100644
+--- a/theories/Init/Datatypes.v
++++ b/theories/Init/Datatypes.v
+@@ -13,6 +13,7 @@ Set Implicit Arguments.
+ Require Import Notations.
+ Require Import Ltac.
+ Require Import Logic.
++From Tactician Require Import Ltac1.Record.
+ 
+ (********************************************************************)
+ (** * Datatypes with zero and one element *)
+diff --git a/theories/Init/Logic.v b/theories/Init/Logic.v
+index 8012235143..0dc7cbc9dc 100644
+--- a/theories/Init/Logic.v
++++ b/theories/Init/Logic.v
+@@ -12,6 +12,7 @@ Set Implicit Arguments.
+ 
+ Require Export Notations.
+ Require Import Ltac.
++From Tactician Require Import Ltac1.Record.
+ 
+ Notation "A -> B" := (forall (_ : A), B) : type_scope.
+ 
+diff --git a/theories/Init/Logic_Type.v b/theories/Init/Logic_Type.v
+index 3d9937ae89..0bef3656ec 100644
+--- a/theories/Init/Logic_Type.v
++++ b/theories/Init/Logic_Type.v
+@@ -16,6 +16,7 @@ Set Implicit Arguments.
+ Require Import Ltac.
+ Require Import Datatypes.
+ Require Export Logic.
++From Tactician Require Import Ltac1.Record.
+ 
+ (** Negation of a type in [Type] *)
+ 
+diff --git a/theories/Init/Peano.v b/theories/Init/Peano.v
+index 98fd52f351..35cc9bdafd 100644
+--- a/theories/Init/Peano.v
++++ b/theories/Init/Peano.v
+@@ -30,6 +30,7 @@ Require Import Ltac.
+ Require Import Datatypes.
+ Require Import Logic.
+ Require Coq.Init.Nat.
++From Tactician Require Import Ltac1.Record.
+ 
+ Open Scope nat_scope.
+ Local Notation "0" := O.
+diff --git a/theories/Init/Prelude.v b/theories/Init/Prelude.v
+index 9f8a054b5c..1afafa68ad 100644
+--- a/theories/Init/Prelude.v
++++ b/theories/Init/Prelude.v
+@@ -24,6 +24,7 @@ Require Export Coq.Init.Wf.
+ Require Export Coq.Init.Ltac.
+ Require Export Coq.Init.Tactics.
+ Require Export Coq.Init.Tauto.
++From Tactician Require Import Ltac1.Record.
+ (* Some initially available plugins. See also:
+    - ltac_plugin (in Ltac)
+    - tauto_plugin (in Tauto).
+diff --git a/theories/Init/Specif.v b/theories/Init/Specif.v
+index 1fb6dabe6f..6f4fecc546 100644
+--- a/theories/Init/Specif.v
++++ b/theories/Init/Specif.v
+@@ -17,6 +17,7 @@ Require Import Notations.
+ Require Import Ltac.
+ Require Import Datatypes.
+ Require Import Logic.
++From Tactician Require Import Ltac1.Record.
+ 
+ (** Subsets and Sigma-types *)
+ 
+diff --git a/theories/Init/Tactics.v b/theories/Init/Tactics.v
+index 35bab1021e..10cbdab82c 100644
+--- a/theories/Init/Tactics.v
++++ b/theories/Init/Tactics.v
+@@ -12,6 +12,7 @@ Require Import Notations.
+ Require Import Ltac.
+ Require Import Logic.
+ Require Import Specif.
++From Tactician Require Import Ltac1.Record.
+ 
+ (** * Useful tactics *)
+ 
+diff --git a/theories/Init/Tauto.v b/theories/Init/Tauto.v
+index 2fc6f3cfa6..bc1822c05a 100644
+--- a/theories/Init/Tauto.v
++++ b/theories/Init/Tauto.v
+@@ -14,6 +14,7 @@ Require Import Notations.
+ Require Import Ltac.
+ Require Import Datatypes.
+ Require Import Logic.
++From Tactician Require Import Ltac1.Record.
+ 
+ Declare ML Module "tauto_plugin".
+ 
+diff --git a/theories/Init/Wf.v b/theories/Init/Wf.v
+index 60200ae0f6..7b068b18a5 100644
+--- a/theories/Init/Wf.v
++++ b/theories/Init/Wf.v
+@@ -19,6 +19,7 @@ Require Import Notations.
+ Require Import Ltac.
+ Require Import Logic.
+ Require Import Datatypes.
++From Tactician Require Import Ltac1.Record.
+ 
+ (** Well-founded induction principle on [Prop] *)
+ 
+-- 
+2.29.1
+

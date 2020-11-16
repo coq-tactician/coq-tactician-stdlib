@@ -1,11 +1,13 @@
 COQLIB:=$(shell $(COQBIN)coqc -where)/
 BACKUPDIR:="user-contrib/tactician-stdlib-backup/"
-VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 user-contrib/Tactician -name *.v)
+VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 -name *.v)
 VOFILES:=$(VFILES:=o)
 BENCHFILES:=$(VFILES:.v=.bench)
 
 BENCHMARK?=
+DETERMINISTIC?=
 BENCHMARKSTRING := $(if $(BENCHMARK),Set Tactician Benchmark $(BENCHMARK).,)
+BENCHMARKSTRING += $(if $(DETERMINISTIC), Set Tactician Benchmark Deterministic.,)
 BENCHMARKFLAG := $(if $(BENCHMARK),-l Benchmark.v,)
 
 ifeq ($(TACTICIANTHEORIES),)
@@ -50,21 +52,15 @@ restore:
 	done
 
 clean:
-	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v bench
+	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v .patch
 	find . -name *.feat -name *.bench -delete
 
-theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v | .vfiles.d
+theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) -noinit -R theories Coq $<
 
-# We have to make sure that Record.v get compiled first.
-user-contrib/Tactician/%.vo: user-contrib/Tactician/%.v user-contrib/Tactician/Ltac1/Record.vo $(PLUGINFILES) Features.v | .vfiles.d
-	@rm -f $*.glob
-	@echo "coqc $<"
-	@$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -noinit $<
-
-%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v | .vfiles.d
+%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) $<
@@ -83,17 +79,15 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 	@$(BOOTCOQC) $(BENCHMARKFLAG) $< 2> /dev/null || true
 	@chmod +w $(<:=o)
 
+theories/Init/%.v:
+	@echo "Linking $@"
+	@mkdir --parents $(dir $@)
+	@cp $(COQLIB)$@ $@
+
 %.v %.cmxs:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
 	@ln -s -T $(COQLIB)$@ $@
-
-# Special target for Ltac.v, so that we can set the proper default proof mode
-theories/Init/Ltac.v:
-	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
-	@cp $(COQLIB)/theories/Init/Ltac.v theories/Init/Ltac.v
-	@echo "Export Set Default Proof Mode \"Tactician Ltac1\"." >> theories/Init/Ltac.v # TODO: With this, we cannot disable tactician anymore
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force
@@ -128,5 +122,9 @@ PLUGINDIRS:=\
                          $(addprefix -I user-contrib/,$(USERCONTRIBDIRS)) \
                          $(VFILES) $(TOTARGET)
 
+.patch: $(VFILES) stdlib-inject.patch
+	@echo "patching"
+	@git apply stdlib-inject.patch
+	@touch .patch
 
 .PHONY: all clean force

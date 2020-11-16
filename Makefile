@@ -5,7 +5,9 @@ VOFILES:=$(VFILES:=o)
 BENCHFILES:=$(VFILES:.v=.bench)
 
 BENCHMARK?=
+DETERMINISTIC?=
 BENCHMARKSTRING := $(if $(BENCHMARK),Set Tactician Benchmark $(BENCHMARK).,)
+BENCHMARKSTRING += $(if $(DETERMINISTIC), Set Tactician Benchmark Deterministic.,)
 BENCHMARKFLAG := $(if $(BENCHMARK),-l Benchmark.v,)
 
 ifeq ($(TACTICIANTHEORIES),)

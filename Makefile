@@ -22,7 +22,7 @@ endif
 # files into the build dir.
 PLUGINFILES=$(shell cd $(COQLIB) && find plugins user-contrib/Ltac2 user-contrib/Tactician -name *.cmxs)
 BOOTCOQC=$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -R $(TACTICIANTHEORIES) Tactician \
-         -rifrom Tactician Ltac1.Record $(FEATFLAG)
+         -rifrom Tactician Ltac1.Record
 
 ifeq ($(BENCHMARK),)
 all: $(VOFILES)
@@ -52,15 +52,15 @@ restore:
 	done
 
 clean:
-	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v Features.v .patch
+	rm -rf theories plugins user-contrib .vfiles.d Benchmark.v .patch
 	find . -name *.feat -name *.bench -delete
 
-theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Features.v .patch | .vfiles.d
+theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) -noinit -R theories Coq $<
 
-%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) Features.v .patch | .vfiles.d
+%.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
 	@$(BOOTCOQC) $<
@@ -93,9 +93,6 @@ theories/Init/%.v:
 Benchmark.v: force
 	@touch -a $@
 	@if [ "$$(cat $@)" != "$(BENCHMARKSTRING)" ]; then echo "$(BENCHMARKSTRING)" > $@; fi
-Features.v: force
-	@touch -a $@
-	@if [ "$$(cat $@)" != "$(FEATSTRING)" ]; then echo "$(FEATSTRING)" > $@; fi
 
 .SECONDARY : $(PLUGINFILES)
 

@@ -70,13 +70,13 @@ theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) Featur
 theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 	@echo "coqc benchmark $<"
 	@chmod -w $(<:=o)
-	@$(BOOTCOQC) $(BENCHMARKFLAG) -noinit -R theories Coq $<
+	@$(BOOTCOQC) $(BENCHMARKFLAG) -noinit -R theories Coq $< 2> /dev/null || true
 	@chmod +w $(<:=o)
 
 %.bench: %.v %.vo Benchmark.v
 	@echo "coqc benchmark $<"
 	@chmod -w $(<:=o)
-	@$(BOOTCOQC) $(BENCHMARKFLAG) $<
+	@$(BOOTCOQC) $(BENCHMARKFLAG) $< 2> /dev/null || true
 	@chmod +w $(<:=o)
 
 theories/Init/%.v:

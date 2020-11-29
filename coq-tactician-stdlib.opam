@@ -32,7 +32,7 @@ In order to finish the process, you should run
 tactician recompile
 " {success}]
 depends: [
-  "coq" {= "dev"}
+  "coq" {= "8.13.dev"}
   "coq-tactician"
 ]
 build: [

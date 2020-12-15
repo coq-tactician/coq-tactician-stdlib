@@ -15,6 +15,7 @@ jobs:
           ocaml_version: '4.10-flambda'
           custom_script: |
             startGroup Print opam config
+              opam switch 4.10.2
               opam config list; opam repo list; opam list
             endGroup
             startGroup Build dependencies

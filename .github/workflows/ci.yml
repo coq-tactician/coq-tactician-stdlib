@@ -8,14 +8,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: coq-community/docker-coq-action@v1.2.2
+      - uses: coq-community/docker-coq-action@v1.2.3
         with:
           opam_file: 'coq-tactician-stdlib.opam'
           coq_version: '8.11'
           ocaml_version: '4.10-flambda'
           custom_script: |
             startGroup Print opam config
-              opam switch 4.10.2
               opam config list; opam repo list; opam list
             endGroup
             startGroup Build dependencies

@@ -66,28 +66,27 @@ theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) .patch
 	@$(BOOTCOQC) $<
 
 # We compile a second time in case of benchmarking, for performance reasons (due to improved parallelism)
-# This is ugly again, because we need to block coqc from actually writing the .vo file
 theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 	@echo "coqc benchmark $<"
-	@chmod -w $(<:=o)
-	@$(BOOTCOQC) $(BENCHMARKFLAG) -noinit -R theories Coq $< 2> /dev/null || true
-	@chmod +w $(<:=o)
+	@touch $(<:.v=.bench.vo)
+	@bwrap --dev-bind / / --bind ${CURDIR}/$(<:.v=.bench.vo) ${CURDIR}/$(<:.v=.vo) \
+		$(BOOTCOQC) $(BENCHMARKFLAG) -noinit -R theories Coq $<
 
 %.bench: %.v %.vo Benchmark.v
 	@echo "coqc benchmark $<"
-	@chmod -w $(<:=o)
-	@$(BOOTCOQC) $(BENCHMARKFLAG) $< 2> /dev/null || true
-	@chmod +w $(<:=o)
+	@touch $(<:.v=.bench.vo)
+	@bwrap --dev-bind / / --bind ${CURDIR}/$(<:.v=.bench.vo) ${CURDIR}/$(<:.v=.vo) \
+		$(BOOTCOQC) $(BENCHMARKFLAG) -R theories Coq $<
 
 theories/Init/%.v:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
-	@cp $(COQLIB)$@ $@
+	cp $(COQLIB)$@ $@
 
 %.v %.cmxs:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
-	@ln -s -T $(COQLIB)$@ $@
+	ln -s -T $(COQLIB)$@ $@
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force

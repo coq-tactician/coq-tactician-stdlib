@@ -82,12 +82,12 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 theories/Init/%.v:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
-	@cp $(COQLIB)$@ $@
+	cp $(COQLIB)$@ $@
 
 %.v %.cmxs:
 	@echo "Linking $@"
 	@mkdir --parents $(dir $@)
-	@ln -s -T $(COQLIB)$@ $@
+	ln -s -T $(COQLIB)$@ $@
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force

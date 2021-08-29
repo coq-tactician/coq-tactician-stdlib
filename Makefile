@@ -1,6 +1,6 @@
 COQLIB:=$(shell $(COQBIN)coqc -where)/
 BACKUPDIR:="user-contrib/tactician-stdlib-backup/"
-VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 -name *.v)
+VFILES:=$(shell cd $(COQLIB) && find theories plugins -name *.v)
 VOFILES:=$(VFILES:=o)
 BENCHFILES:=$(VFILES:.v=.bench)
 
@@ -20,9 +20,9 @@ endif
 # TODO: This is ugly, but since there are no .mllib source files installed by Coq,
 # coqdep cannot find plugin dependencies. Therefore, we just have to link all the .cmxs
 # files into the build dir.
-PLUGINFILES=$(shell cd $(COQLIB) && find plugins user-contrib/Ltac2 user-contrib/Tactician -name *.cmxs)
-BOOTCOQC=$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -R $(TACTICIANTHEORIES) Tactician \
-         -rifrom Tactician Ltac1.Record
+PLUGINFILES=$(shell cd $(COQLIB) && find plugins user-contrib/Tactician -name *.cmxs)
+BOOTCOQC=$(COQBIN)coqc -q -allow-sprop -coqlib . -I $(TACTICIANSRC) -R $(TACTICIANTHEORIES) Tactician \
+         -require Tactician.Ltac1.Record
 
 ifeq ($(BENCHMARK),)
 all: $(VOFILES)
@@ -101,7 +101,7 @@ Benchmark.v: force
 TOTARGET = > "$@" 2> /dev/null || (RV=$$?; rm -f "$@"; exit $${RV})
 
 USERCONTRIBDIRS:=\
-	Ltac2 Tactician
+	Tactician
 PLUGINDIRS:=\
   omega		micromega \
   setoid_ring 	extraction \

@@ -16,7 +16,7 @@ index 77236f77df..81f93cab4e 100644
  
  Global Set Default Proof Mode "Classic".
 +
-+From Tactician Require Import Ltac1.
++From Tactician Require Import Ltac1.Record.
 +Global Set Default Proof Mode "Tactician Ltac1".
 -- 
 2.33.1

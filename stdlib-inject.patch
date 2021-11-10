@@ -16,7 +16,7 @@ index ac5a69a38a..87a38e4851 100644
  
  Export Set Default Proof Mode "Classic".
 +
-+From Tactician Require Import Ltac1.
++From Tactician Require Import Ltac1.Record.
 +Export Set Default Proof Mode "Tactician Ltac1".
 >>>>>>> coq8.12
 -- 

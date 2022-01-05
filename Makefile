@@ -35,7 +35,7 @@ install: backup install-recompiled
 backup:
 	for f in $(VOFILES); do\
 		echo "Backing up $$f";\
-		mkdir --p $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
+		mkdir -p $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
 		cp -p $(COQLIB)$$f $(COQLIB)$(BACKUPDIR)$$f;\
 	done
 
@@ -80,7 +80,7 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 
 theories/Init/%.v:
 	@echo "Linking $@"
-	@mkdir --p $(dir $@)
+	@mkdir -p $(dir $@)
 	@cp $(COQLIB)$@ $@
 
 %.v %.cmxs:

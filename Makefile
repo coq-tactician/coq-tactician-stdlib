@@ -35,7 +35,7 @@ install: backup install-recompiled
 backup:
 	for f in $(VOFILES); do\
 		echo "Backing up $$f";\
-		mkdir --parents $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
+		mkdir --p $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
 		cp -p $(COQLIB)$$f $(COQLIB)$(BACKUPDIR)$$f;\
 	done
 
@@ -80,13 +80,13 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 
 theories/Init/%.v:
 	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
+	@mkdir --p $(dir $@)
 	@cp $(COQLIB)$@ $@
 
 %.v %.cmxs:
 	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
-	@ln -s -T $(COQLIB)$@ $@
+	@mkdir -p $(dir $@)
+	@ln -s -f $(COQLIB)$@ $@ # -f flag should not be needed, but let's be extra safe
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force

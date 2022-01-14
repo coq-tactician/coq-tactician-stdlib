@@ -11,7 +11,7 @@ jobs:
       - uses: coq-community/docker-coq-action@v1.2.3
         with:
           opam_file: 'coq-tactician-stdlib.opam'
-          coq_version: '8.13'
+          coq_version: '8.14'
           ocaml_version: '4.11-flambda'
           install: |
             startGroup "Install dependencies"

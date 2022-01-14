@@ -1,6 +1,6 @@
-From c978b9f8b2d96d9f4dd45be4e6f44491efcd14ca Mon Sep 17 00:00:00 2001
+From f79ba3941618a0e8b13a0b44ca3e25d6f99d37b0 Mon Sep 17 00:00:00 2001
 From: Lasse Blaauwbroek <lasse@blaauwbroek.eu>
-Date: Wed, 10 Nov 2021 22:08:25 +0100
+Date: Wed, 10 Nov 2021 22:16:23 +0100
 Subject: [PATCH] Patch to inject Tactician into the standard library
 
 ---
@@ -20,7 +20,6 @@ index ac5a69a38a..df188a5af7 100644
 -Export Set Default Proof Mode "Classic".
 +From Tactician Require Import Ltac1.Record.
 +Export Set Default Proof Mode "Tactician Ltac1".
->>>>>>> coq8.12
 -- 
 2.34.0
 

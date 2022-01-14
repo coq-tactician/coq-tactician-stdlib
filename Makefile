@@ -1,6 +1,7 @@
 COQLIB:=$(shell $(COQBIN)coqc -where)/
+COQCORELIB:=$(COQLIB)/../coq-core/
 BACKUPDIR:="user-contrib/tactician-stdlib-backup/"
-VFILES:=$(shell cd $(COQLIB) && find theories plugins user-contrib/Ltac2 -name *.v)
+VFILES:=$(shell cd $(COQLIB) && find theories user-contrib/Ltac2 -name *.v)
 VOFILES:=$(VFILES:=o)
 BENCHFILES:=$(VFILES:.v=.bench)
 
@@ -20,7 +21,7 @@ endif
 # TODO: This is ugly, but since there are no .mllib source files installed by Coq,
 # coqdep cannot find plugin dependencies. Therefore, we just have to link all the .cmxs
 # files into the build dir.
-PLUGINFILES=$(shell cd $(COQLIB) && find plugins user-contrib/Ltac2 user-contrib/Tactician -name *.cmxs)
+PLUGINFILES=$(shell cd $(COQCORELIB) && find plugins -name *.cmxs)
 BOOTCOQC=$(COQBIN)coqc -q -coqlib . -I $(TACTICIANSRC) -R $(TACTICIANTHEORIES) Tactician \
          -rifrom Tactician Ltac1.Record
 
@@ -35,7 +36,7 @@ install: backup install-recompiled
 backup:
 	for f in $(VOFILES); do\
 		echo "Backing up $$f";\
-		mkdir --parents $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
+		mkdir -p $(COQLIB)$(BACKUPDIR)$$(dirname $$f);\
 		cp -p $(COQLIB)$$f $(COQLIB)$(BACKUPDIR)$$f;\
 	done
 
@@ -80,13 +81,18 @@ theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v
 
 theories/Init/%.v:
 	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
-	cp $(COQLIB)$@ $@
+	@mkdir -p $(dir $@)
+	@cp $(COQLIB)$@ $@
 
-%.v %.cmxs:
+%.v:
 	@echo "Linking $@"
-	@mkdir --parents $(dir $@)
-	ln -s -T $(COQLIB)$@ $@
+	@mkdir -p $(dir $@)
+	@ln -s -f $(COQLIB)$@ $@ # -f flag should not be needed, but let's be extra safe
+
+%.cmxs:
+	@echo "Linking $@"
+	@mkdir -p $(dir $@)
+	@ln -s -f $(COQCORELIB)$@ $@ # -f flag should not be needed, but let's be extra safe
 
 # TODO: Also ugly, see https://github.com/coq/coq/pull/11851
 Benchmark.v: force

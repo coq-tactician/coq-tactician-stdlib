@@ -1,12 +1,34 @@
-From efc6af59b5e4edaf3e98072ad8a46b23c1da1559 Mon Sep 17 00:00:00 2001
+From 0c375495ac05f09a13037ba07bd5ce63d45d8dba Mon Sep 17 00:00:00 2001
 From: Lasse Blaauwbroek <lasse@blaauwbroek.eu>
 Date: Wed, 10 Nov 2021 21:45:29 +0100
 Subject: [PATCH] Patch to inject Tactician into the standard library
 
 ---
- theories/Init/Notations.v | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ theories/Classes/SetoidTactics.v | 2 ++
+ theories/Init/Notations.v        | 5 ++---
+ theories/Init/Tactics.v          | 1 +
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/theories/Classes/SetoidTactics.v b/theories/Classes/SetoidTactics.v
+index 559a404ddd..82fda2491b 100644
+--- a/theories/Classes/SetoidTactics.v
++++ b/theories/Classes/SetoidTactics.v
+@@ -64,6 +64,7 @@ Ltac setoidreplaceat H t occs :=
+ 
+ Tactic Notation "setoid_replace" constr(x) "with" constr(y) :=
+   setoidreplace (default_relation x y) idtac.
++Tactician Register Tactic "setoid_replace_with" setoid_replace _ with _.
+ 
+ Tactic Notation "setoid_replace" constr(x) "with" constr(y)
+   "at" int_or_var_list(o) :=
+@@ -81,6 +82,7 @@ Tactic Notation "setoid_replace" constr(x) "with" constr(y)
+ Tactic Notation "setoid_replace" constr(x) "with" constr(y)
+   "by" tactic3(t) :=
+   setoidreplace (default_relation x y) ltac:(t).
++Tactician Register Tactic "setoid_replace_with_by" setoid_replace _ with _ by idtac.
+ 
+ Tactic Notation "setoid_replace" constr(x) "with" constr(y)
+   "at" int_or_var_list(o)
 diff --git a/theories/Init/Notations.v b/theories/Init/Notations.v
 index 77236f77df..7c56963295 100644
 --- a/theories/Init/Notations.v
@@ -20,6 +42,18 @@ index 77236f77df..7c56963295 100644
 -Global Set Default Proof Mode "Classic".
 +From Tactician Require Export Ltac1.Record.
 +Global Set Default Proof Mode "Tactician Ltac1".
+diff --git a/theories/Init/Tactics.v b/theories/Init/Tactics.v
+index db36d0cda7..26fdc9c4a8 100644
+--- a/theories/Init/Tactics.v
++++ b/theories/Init/Tactics.v
+@@ -186,6 +186,7 @@ Ltac easy :=
+   fail "Cannot solve this goal".
+ 
+ Tactic Notation "now" tactic(t) := t; easy.
++Tactician Alias Record (now idtac) Decompose.
+ 
+ (** Slightly more than [easy]*)
+ 
 -- 
 2.34.0
 

@@ -83,6 +83,11 @@ theories/Init/%.v:
 	@mkdir -p $(dir $@)
 	@cp $(COQLIB)$@ $@
 
+theories/Classes/SetoidTactics.v:
+	@echo "Linking $@"
+	@mkdir -p $(dir $@)
+	@cp $(COQLIB)$@ $@
+
 %.v %.cmxs:
 	@echo "Linking $@"
 	@mkdir -p $(dir $@)

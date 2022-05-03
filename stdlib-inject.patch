@@ -1,4 +1,4 @@
-From f79ba3941618a0e8b13a0b44ca3e25d6f99d37b0 Mon Sep 17 00:00:00 2001
+From d5ebfffbf6a97b4122291c1f6f14deebf96a4d6a Mon Sep 17 00:00:00 2001
 From: Lasse Blaauwbroek <lasse@blaauwbroek.eu>
 Date: Wed, 10 Nov 2021 22:16:23 +0100
 Subject: [PATCH] Patch to inject Tactician into the standard library
@@ -8,7 +8,7 @@ Subject: [PATCH] Patch to inject Tactician into the standard library
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/theories/Init/Ltac.v b/theories/Init/Ltac.v
-index ac5a69a38a..df188a5af7 100644
+index ac5a69a38a..0caebd8ff9 100644
 --- a/theories/Init/Ltac.v
 +++ b/theories/Init/Ltac.v
 @@ -8,6 +8,5 @@
@@ -18,8 +18,8 @@ index ac5a69a38a..df188a5af7 100644
 -Declare ML Module "ltac_plugin".
 -
 -Export Set Default Proof Mode "Classic".
-+From Tactician Require Export Ltac1.Record.
++Load "Ltac1/Record".
 +Export Set Default Proof Mode "Tactician Ltac1".
 -- 
-2.34.0
+2.36.0
 

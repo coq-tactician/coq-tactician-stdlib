@@ -1,4 +1,4 @@
-From 0c375495ac05f09a13037ba07bd5ce63d45d8dba Mon Sep 17 00:00:00 2001
+From 5715fee7767de5eb197b62947032e91a21a5d529 Mon Sep 17 00:00:00 2001
 From: Lasse Blaauwbroek <lasse@blaauwbroek.eu>
 Date: Wed, 10 Nov 2021 21:45:29 +0100
 Subject: [PATCH] Patch to inject Tactician into the standard library
@@ -30,7 +30,7 @@ index 559a404ddd..82fda2491b 100644
  Tactic Notation "setoid_replace" constr(x) "with" constr(y)
    "at" int_or_var_list(o)
 diff --git a/theories/Init/Notations.v b/theories/Init/Notations.v
-index 77236f77df..7c56963295 100644
+index 77236f77df..4a3991bde8 100644
 --- a/theories/Init/Notations.v
 +++ b/theories/Init/Notations.v
 @@ -125,6 +125,5 @@ Open Scope type_scope.
@@ -40,7 +40,7 @@ index 77236f77df..7c56963295 100644
 -Declare ML Module "ltac_plugin".
 -
 -Global Set Default Proof Mode "Classic".
-+From Tactician Require Export Ltac1.Record.
++Load "Ltac1/Record".
 +Global Set Default Proof Mode "Tactician Ltac1".
 diff --git a/theories/Init/Tactics.v b/theories/Init/Tactics.v
 index db36d0cda7..26fdc9c4a8 100644
@@ -55,5 +55,5 @@ index db36d0cda7..26fdc9c4a8 100644
  (** Slightly more than [easy]*)
  
 -- 
-2.34.0
+2.36.0
 

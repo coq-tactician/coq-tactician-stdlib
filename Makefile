@@ -58,12 +58,12 @@ clean:
 theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(PLUGINFILES) .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
-	@$(BOOTCOQC) -noinit -R theories Coq $<
+	$(BOOTCOQC) -noinit -R theories Coq $<
 
 %.vo %.glob: %.v theories/Init/Prelude.vo $(PLUGINFILES) .patch | .vfiles.d
 	@rm -f $*.glob
 	@echo "coqc $<"
-	@$(BOOTCOQC) $<
+	$(BOOTCOQC) $<
 
 # We compile a second time in case of benchmarking, for performance reasons (due to improved parallelism)
 theories/Init/%.bench: theories/Init/%.v theories/Init/%.vo Benchmark.v

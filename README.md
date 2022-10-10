@@ -5,7 +5,7 @@ For the main Tactician repository, see [coq-tactician](https://github.com/coq-ta
 **Note:** As of Coq 8.17, this package is no longer needed because Coq's standard
 library has been split off from Coq's core (there are now Opam packages `coq-core`
 and `coq-stdlib`). In order to compile `coq-stdlib` with support for Tactician,
-follow the [package instumentation instructions](](https://coq-tactician.github.io/manual/coq-packages/))
+follow the [package instumentation instructions](https://coq-tactician.github.io/manual/coq-packages/)
 in the manual.
 
 This package recompiles Coq's standard library with Tactician's (`coq-tactician`)

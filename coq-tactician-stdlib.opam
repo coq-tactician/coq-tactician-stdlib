@@ -19,6 +19,7 @@ dev-repo: "git+https://github.com/coq-tactician/coq-tactician-stdlib"
 bug-reports: "https://github.com/coq-tactician/coq-tactician-stdlib/issues"
 maintainer: "Lasse Blaauwbroek <lasse@blaauwbroek.eu>"
 authors: "Lasse Blaauwbroek <lasse@blaauwbroek.eu"
+license: "MIT"
 messages: [
   "*** WARNING ***"
   "This package will overwrite Coq's standard library files."
